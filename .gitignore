@@ -1,0 +1,24 @@
+# Build e binários
+bin/
+obj/
+
+# Arquivos de usuário do Visual Studio/VS Code
+*.user
+*.suo
+*.vscode/
+
+# Configurações locais que não devem ir pro GitHub
+appsettings.Development.json
+
+# Certificados e arquivos temporários
+*.pfx
+*.log
+*.vs/
+
+# Pacotes NuGet
+*.nupkg
+*.snupkg
+.nuget/
+
+# Arquivos de publish
+publish/
