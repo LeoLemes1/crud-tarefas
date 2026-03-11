@@ -1,0 +1,71 @@
+[
+  {
+    "ContainingType": "Controllers.AutControlle.TarefasController",
+    "Method": "CriarTarefa",
+    "RelativePath": "api/Tarefas",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "tarefa",
+        "Type": "TarefasCRUD.Entidades.Tarefa",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Controllers.AutControlle.TarefasController",
+    "Method": "VisualiarTarefa",
+    "RelativePath": "api/Tarefas/{Id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Controllers.AutControlle.TarefasController",
+    "Method": "AtualizarTarefa",
+    "RelativePath": "api/Tarefas/{Id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "tarefaAtualizada",
+        "Type": "TarefasCRUD.Entidades.Tarefa",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Controllers.AutControlle.TarefasController",
+    "Method": "DeletarTarefa",
+    "RelativePath": "api/Tarefas/{Id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  }
+]
