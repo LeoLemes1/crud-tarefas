@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using TarefasCRUD.Data;
 using TarefasCRUD.DTOs;
 using TarefasCRUD.Entidades;
+using TarefasCRUD.Interfaces;
+using TarefasCRUD.Repositorios;
 
 namespace TarefasCRUD.Controllers
 {
@@ -11,20 +13,20 @@ namespace TarefasCRUD.Controllers
     public class TarefasController : ControllerBase
     {
 
-        private readonly TarefaDbContext _context;
+        private readonly IRepositorioTarefa _RepositorioTarefa;
 
-        public TarefasController(TarefaDbContext context)
+        public TarefasController(RepositorioTarefa RepositorioTarefa)
         {
-            _context = context;
+            _RepositorioTarefa = RepositorioTarefa;
         }
 
 
         [HttpGet]
-        public async Task<IActionResult> ListarTarefas()
+        public async Task<IActionResult> ListarTodasAsTarefas()
         {
-            var tarefas = await _context.Tarefas.ToListAsync();
+            var tarefas = await _RepositorioTarefa.BuscarTodosAsTarefasAsync();
 
-            var response = tarefas.Select(x => new TarefaResponse 
+            var response = tarefas.Select(x => new TarefaResponse
             {
                 Id = x.Id,
                 Titulo = x.Titulo,
@@ -32,16 +34,16 @@ namespace TarefasCRUD.Controllers
                 CriadoEm = x.CriadoEm
             }).ToList();
 
-
             return Ok(response);
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> VisualizarTarefa(Guid id)
+        public async Task<IActionResult> ListarTarefaPorId(Guid id)
         {
-            var tarefa = await _context.Tarefas.FirstOrDefaultAsync(x => x.Id == id);
+            var tarefa = await _RepositorioTarefa.BuscarTarefaPorIdAsync(id);
+
             if (tarefa == null)
-                return NotFound("Tarefa nao encontrada");
+                return NotFound("Tarefa nao encontrada!");
 
             var response = new TarefaResponse
             {
@@ -61,8 +63,8 @@ namespace TarefasCRUD.Controllers
                 Titulo = request.Titulo,
                 Descricao = request.Descricao
             };
-            _context.Tarefas.Add(tarefa);
-            await _context.SaveChangesAsync();
+           
+            await _RepositorioTarefa.CriarTarefaAsync(tarefa);
 
             var response = new TarefaResponse
             {
@@ -77,13 +79,13 @@ namespace TarefasCRUD.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> AtualizarTarefa(Guid id, [FromBody] TarefaRequest request)
         {
-            var tarefa = await _context.Tarefas.FirstOrDefaultAsync(x => x.Id == id);
+            var tarefa = await _RepositorioTarefa.FirstOrDefaultAsync(x => x.Id == id);
             if (tarefa == null)
                 return NotFound("Tarefa nao encontrada");
 
             tarefa.Titulo = request.Titulo;
             tarefa.Descricao = request.Descricao;
-            await _context.SaveChangesAsync();
+            await _RepositorioTarefa.SaveChangesAsync();
 
             var response = new TarefaResponse
             {
@@ -98,12 +100,12 @@ namespace TarefasCRUD.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletarTarefa(Guid id)
         {
-            var tarefa = await _context.Tarefas.FirstOrDefaultAsync(x => x.Id == id);
+            var tarefa = await _RepositorioTarefa.Tarefas.FirstOrDefaultAsync(x => x.Id == id);
             if (tarefa == null)
                 return NotFound("Tarefa nao encontrada");
 
-            _context.Tarefas.Remove(tarefa);
-            await _context.SaveChangesAsync();
+            _RepositorioTarefa.Tarefas.Remove(tarefa);
+            await _RepositorioTarefa.SaveChangesAsync();
             return NoContent();
         }
     }
