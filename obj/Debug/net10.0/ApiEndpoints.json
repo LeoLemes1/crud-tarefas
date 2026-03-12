@@ -1,24 +1,34 @@
 [
   {
-    "ContainingType": "Controllers.AutControlle.TarefasController",
+    "ContainingType": "Controllers.AutControlle.TarefaController",
+    "Method": "ListarTarefas",
+    "RelativePath": "api/Tarefa",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Controllers.AutControlle.TarefaController",
     "Method": "CriarTarefa",
-    "RelativePath": "api/Tarefas",
+    "RelativePath": "api/Tarefa",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
         "Name": "tarefa",
-        "Type": "TarefasCRUD.Entidades.Tarefa",
+        "Type": "TarefasCRUD.DTOs.TarefaRequest",
         "IsRequired": true
       }
     ],
     "ReturnTypes": []
   },
   {
-    "ContainingType": "Controllers.AutControlle.TarefasController",
+    "ContainingType": "Controllers.AutControlle.TarefaController",
     "Method": "VisualiarTarefa",
-    "RelativePath": "api/Tarefas/{Id}",
+    "RelativePath": "api/Tarefa/{Id}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -32,9 +42,9 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "Controllers.AutControlle.TarefasController",
+    "ContainingType": "Controllers.AutControlle.TarefaController",
     "Method": "AtualizarTarefa",
-    "RelativePath": "api/Tarefas/{Id}",
+    "RelativePath": "api/Tarefa/{Id}",
     "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
@@ -46,16 +56,16 @@
       },
       {
         "Name": "tarefaAtualizada",
-        "Type": "TarefasCRUD.Entidades.Tarefa",
+        "Type": "TarefasCRUD.DTOs.TarefaRequest",
         "IsRequired": true
       }
     ],
     "ReturnTypes": []
   },
   {
-    "ContainingType": "Controllers.AutControlle.TarefasController",
+    "ContainingType": "Controllers.AutControlle.TarefaController",
     "Method": "DeletarTarefa",
-    "RelativePath": "api/Tarefas/{Id}",
+    "RelativePath": "api/Tarefa/{Id}",
     "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,

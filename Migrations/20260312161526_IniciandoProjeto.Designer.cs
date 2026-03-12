@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TarefasCRUD.Data;
@@ -11,9 +12,11 @@ using TarefasCRUD.Data;
 namespace TarefasCRUD.Migrations
 {
     [DbContext(typeof(TarefaDbContext))]
-    partial class TarefaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260312161526_IniciandoProjeto")]
+    partial class IniciandoProjeto
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -28,9 +31,8 @@ namespace TarefasCRUD.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<DateTime>("CriadoEm")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("CriacaoAt");
+                    b.Property<DateTime>("CriacaoAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Descricao")
                         .HasMaxLength(1000)

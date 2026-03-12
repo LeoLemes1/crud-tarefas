@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using TarefasCRUD.Entidades;
 
@@ -18,7 +18,8 @@ namespace TarefasCRUD.Mapping
             builder.Property(x => x.Descricao)
                 .HasMaxLength(1000);
 
-            builder.Property(x => x.CriacaoAt);
+            builder.Property(x => x.CriadoEm)
+                .HasColumnName("CriacaoAt");
         }
     }
 }
