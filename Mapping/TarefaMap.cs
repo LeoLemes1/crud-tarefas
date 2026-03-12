@@ -10,16 +10,20 @@ namespace TarefasCRUD.Mapping
         {
             builder.HasKey(x => x.Id);
 
-            builder.Property(x => x.Id);
+            builder.Property(x => x.Id)
+                .IsRequired();
 
             builder.Property(x => x.Titulo)
-                .HasMaxLength(200);
+                .HasMaxLength(200)
+                .IsRequired();
 
             builder.Property(x => x.Descricao)
-                .HasMaxLength(1000);
+                .HasMaxLength(1000)
+                .IsRequired();
 
             builder.Property(x => x.CriadoEm)
-                .HasColumnName("CriacaoAt");
+                .HasColumnName("CriacaoAt")
+                .IsRequired();
         }
     }
 }

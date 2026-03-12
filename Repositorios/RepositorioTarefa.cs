@@ -2,6 +2,7 @@ using TarefasCRUD.Data;
 using TarefasCRUD.Entidades;
 using TarefasCRUD.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace TarefasCRUD.Repositorios;
 
@@ -29,13 +30,32 @@ public class RepositorioTarefa : IRepositorioTarefa
         return tarefa;
     }
 
-    public Task<Tarefa?> EditarTarefaAsync(Guid id, string titulo, string descricao)
-    {
-        throw new NotImplementedException();
-    }
+  public async Task<Tarefa> EditarTarefaAsync(Guid id, string titulo, string descricao)
+{
+    var tarefa = await _context.Tarefas.FirstOrDefaultAsync(x => x.Id == id);
 
-    public Task<bool> ExcluirTarefaAsync(Guid id)
+    if (tarefa == null)
+        return null;
+
+    tarefa.Titulo = titulo;
+    tarefa.Descricao = descricao;
+
+    await _context.SaveChangesAsync();
+
+    return tarefa;
+}
+
+    public async Task<bool> ExcluirTarefaAsync(Guid id)
     {
-        throw new NotImplementedException();
+        var tarefa = await _context.Tarefas.FirstOrDefaultAsync(x => x.Id == id);
+
+        if (tarefa == null)
+            return false;
+
+        _context.Tarefas.Remove(tarefa);
+
+        await _context.SaveChangesAsync();
+
+        return true;
     }
 }

@@ -15,9 +15,9 @@ namespace TarefasCRUD.Controllers
 
         private readonly IRepositorioTarefa _RepositorioTarefa;
 
-        public TarefasController(RepositorioTarefa RepositorioTarefa)
+        public TarefasController(IRepositorioTarefa repositorioTarefa)
         {
-            _RepositorioTarefa = RepositorioTarefa;
+            _RepositorioTarefa = repositorioTarefa;
         }
 
 
@@ -79,13 +79,10 @@ namespace TarefasCRUD.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> AtualizarTarefa(Guid id, [FromBody] TarefaRequest request)
         {
-            var tarefa = await _RepositorioTarefa.FirstOrDefaultAsync(x => x.Id == id);
-            if (tarefa == null)
-                return NotFound("Tarefa nao encontrada");
+            var tarefa = await _RepositorioTarefa.EditarTarefaAsync(id, request.Titulo, request.Descricao);
 
-            tarefa.Titulo = request.Titulo;
-            tarefa.Descricao = request.Descricao;
-            await _RepositorioTarefa.SaveChangesAsync();
+            if (tarefa == null)
+                return NotFound("Tarefa nao encontrada!");
 
             var response = new TarefaResponse
             {
@@ -93,19 +90,19 @@ namespace TarefasCRUD.Controllers
                 Titulo = tarefa.Titulo,
                 Descricao = tarefa.Descricao,
                 CriadoEm = tarefa.CriadoEm
-            };
+            };  
+
             return Ok(response);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletarTarefa(Guid id)
         {
-            var tarefa = await _RepositorioTarefa.Tarefas.FirstOrDefaultAsync(x => x.Id == id);
-            if (tarefa == null)
-                return NotFound("Tarefa nao encontrada");
+            var deletado = await _RepositorioTarefa.ExcluirTarefaAsync(id);
 
-            _RepositorioTarefa.Tarefas.Remove(tarefa);
-            await _RepositorioTarefa.SaveChangesAsync();
+            if (!deletado)
+                return NotFound("Tarefa não encontrada");
+
             return NoContent();
         }
     }
