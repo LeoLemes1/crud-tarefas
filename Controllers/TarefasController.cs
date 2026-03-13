@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using TarefasCRUD.Data;
 using TarefasCRUD.DTOs;
-using TarefasCRUD.Entidades;
-using TarefasCRUD.Interfaces;
-using TarefasCRUD.Repositorios;
+using TarefasCRUD.Handlers.AtualizarTarefa;
+using TarefasCRUD.Handlers.BuscarTarefaPorId;
+using TarefasCRUD.Handlers.BuscarTodasAsTarefas;
+using TarefasCRUD.Handlers.CriarTarefa;
+using TarefasCRUD.Handlers.DeletarTarefa;
 
 namespace TarefasCRUD.Controllers
 {
@@ -12,27 +12,31 @@ namespace TarefasCRUD.Controllers
     [Route("api/[controller]")]
     public class TarefasController : ControllerBase
     {
+        private readonly AtualizarTarefaHandler _atualizarTarefaHandler;
+        private readonly BuscarTodasAsTarefasHandler _buscarTodasAsTarefasHandler;
+        private readonly BuscarTarefaPorIdHandler _buscarTarefaPorIdHandler;
+        private readonly CriarTarefaHandler _criarTarefaHandler;
+        private readonly DeletarTarefaHandler _deletarTarefaHandler;
 
-        private readonly IRepositorioTarefa _RepositorioTarefa;
-
-        public TarefasController(IRepositorioTarefa repositorioTarefa)
+        public TarefasController(
+            AtualizarTarefaHandler atualizarTarefaHandler,
+            BuscarTodasAsTarefasHandler buscarTodasAsTarefasHandler,
+            BuscarTarefaPorIdHandler buscarTarefaPorIdHandler,
+            CriarTarefaHandler criarTarefaHandler,
+            DeletarTarefaHandler deletarTarefaHandler)
         {
-            _RepositorioTarefa = repositorioTarefa;
+            _atualizarTarefaHandler = atualizarTarefaHandler;
+            _buscarTodasAsTarefasHandler = buscarTodasAsTarefasHandler;
+            _buscarTarefaPorIdHandler = buscarTarefaPorIdHandler;
+            _criarTarefaHandler = criarTarefaHandler;
+            _deletarTarefaHandler = deletarTarefaHandler;
         }
 
 
         [HttpGet]
         public async Task<IActionResult> ListarTodasAsTarefas()
         {
-            var tarefas = await _RepositorioTarefa.BuscarTodosAsTarefasAsync();
-
-            var response = tarefas.Select(x => new TarefaResponse
-            {
-                Id = x.Id,
-                Titulo = x.Titulo,
-                Descricao = x.Descricao,
-                CriadoEm = x.CriadoEm
-            }).ToList();
+           var response = await _buscarTodasAsTarefasHandler.Handle();
 
             return Ok(response);
         }
@@ -40,57 +44,37 @@ namespace TarefasCRUD.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> ListarTarefaPorId(Guid id)
         {
-            var tarefa = await _RepositorioTarefa.BuscarTarefaPorIdAsync(id);
+            var response = await _buscarTarefaPorIdHandler.Handle(id);
 
-            if (tarefa == null)
-                return NotFound("Tarefa nao encontrada!");
+            if (response == null)
+                return NotFound("Tarefa não encontrada.");
 
-            var response = new TarefaResponse
-            {
-                Id = tarefa.Id,
-                Titulo = tarefa.Titulo,
-                Descricao = tarefa.Descricao,
-                CriadoEm = tarefa.CriadoEm
-            };
             return Ok(response);
-        }
+}
 
         [HttpPost]
-        public async Task<IActionResult> CriarTarefa([FromBody] TarefaRequest request)
+        public async Task<IActionResult> CriarTarefa([FromBody] TarefaRequest? request)
         {
-            var tarefa = new Tarefa
-            {
-                Titulo = request.Titulo,
-                Descricao = request.Descricao
-            };
-           
-            await _RepositorioTarefa.CriarTarefaAsync(tarefa);
+            if (request == null || string.IsNullOrWhiteSpace(request.Titulo) || string.IsNullOrWhiteSpace(request.Descricao))
+                return BadRequest("Titulo e Descricao sao obrigatorios");
 
-            var response = new TarefaResponse
-            {
-                Id = tarefa.Id,
-                Titulo = tarefa.Titulo,
-                Descricao = tarefa.Descricao,
-                CriadoEm = tarefa.CriadoEm
-            };
-            return Created($"/api/tarefas/{tarefa.Id}", response);
+            var response = await _criarTarefaHandler.Handle(request);
+            if (response == null)
+                return BadRequest("Titulo e Descricao sao obrigatorios");
+
+            return Created($"/api/tarefas/{response.Id}", response);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> AtualizarTarefa(Guid id, [FromBody] TarefaRequest request)
+        public async Task<IActionResult> AtualizarTarefa(Guid id, [FromBody] TarefaRequest? request)
         {
-            var tarefa = await _RepositorioTarefa.EditarTarefaAsync(id, request.Titulo, request.Descricao);
+            if (request == null || (string.IsNullOrWhiteSpace(request.Titulo) && string.IsNullOrWhiteSpace(request.Descricao)))
+                return BadRequest("Informe pelo menos um dos campos: Titulo ou Descricao");
 
-            if (tarefa == null)
-                return NotFound("Tarefa nao encontrada!");
+            var response = await _atualizarTarefaHandler.Handle(id, request);
 
-            var response = new TarefaResponse
-            {
-                Id = tarefa.Id,
-                Titulo = tarefa.Titulo,
-                Descricao = tarefa.Descricao,
-                CriadoEm = tarefa.CriadoEm
-            };  
+            if (response == null)
+                return NotFound("Tarefa não encontrada.");
 
             return Ok(response);
         }
@@ -98,7 +82,7 @@ namespace TarefasCRUD.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletarTarefa(Guid id)
         {
-            var deletado = await _RepositorioTarefa.ExcluirTarefaAsync(id);
+            var deletado = await _deletarTarefaHandler.Handle(id);
 
             if (!deletado)
                 return NotFound("Tarefa não encontrada");

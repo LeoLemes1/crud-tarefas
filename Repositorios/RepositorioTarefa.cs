@@ -2,7 +2,6 @@ using TarefasCRUD.Data;
 using TarefasCRUD.Entidades;
 using TarefasCRUD.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query;
 
 namespace TarefasCRUD.Repositorios;
 
@@ -30,7 +29,7 @@ public class RepositorioTarefa : IRepositorioTarefa
         return tarefa;
     }
 
-  public async Task<Tarefa> EditarTarefaAsync(Guid id, string titulo, string descricao)
+  public async Task<Tarefa?> EditarTarefaAsync(Guid id, string titulo, string descricao)
 {
     var tarefa = await _context.Tarefas.FirstOrDefaultAsync(x => x.Id == id);
 
