@@ -14,15 +14,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="TarefasCRUD.Application\TarefasCRUD.Application.csproj" />
-    <ProjectReference Include="TarefasCRUD.Infrastructure\TarefasCRUD.Infrastructure.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Remove="TarefasCRUD.Domain\**" />
-    <Compile Remove="TarefasCRUD.Application\**" />
-    <Compile Remove="TarefasCRUD.Infrastructure\**" />
-    <Compile Remove="Migrations\**" />
+    <ProjectReference Include="..\TarefasCRUD.Application\TarefasCRUD.Application.csproj" />
+    <ProjectReference Include="..\TarefasCRUD.Infrastructure\TarefasCRUD.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

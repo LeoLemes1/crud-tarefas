@@ -6,7 +6,7 @@ using TarefasCRUD.Application.Handlers.BuscarTodasAsTarefas;
 using TarefasCRUD.Application.Handlers.CriarTarefa;
 using TarefasCRUD.Application.Handlers.DeletarTarefa;
 
-namespace TarefasCRUD.Controllers;
+namespace TarefasCRUD.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
